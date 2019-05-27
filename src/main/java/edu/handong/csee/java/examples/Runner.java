@@ -1,5 +1,7 @@
 package edu.handong.csee.java.examples;
 
+import java.io.File;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -12,7 +14,9 @@ public class Runner {
 	String path;
 	boolean verbose;
 	boolean help;
-
+	boolean fullpath;
+	int count;
+	
 	public static void main(String[] args) {
 
 		Runner myRunner = new Runner();
@@ -29,16 +33,37 @@ public class Runner {
 				return;
 			}
 			
+			
 			// path is required (necessary) data so no need to have a branch.
 			System.out.println("You provided \"" + path + "\" as the value of the option p");
 			
 			// TODO show the number of files in the path
+			File myfile = new File(path);
+			File[] list = myfile.listFiles();
+			
+			for(File file: list) {
+				count++;
+			}
+			
+			
+			System.out.println("Number of files in the path is " + count);
 			
 			if(verbose) {
 				
 				// TODO list all files in the path
+				for(File file: list) {
+					System.out.println(file);
+				}
+				
 				
 				System.out.println("Your program is terminated. (This message is shown because you turned on -v option!");
+			}
+			
+			if(fullpath) {
+				
+				//Print out the given path
+				System.out.println(" ");
+				
 			}
 		}
 	}
@@ -53,7 +78,8 @@ public class Runner {
 			path = cmd.getOptionValue("p");
 			verbose = cmd.hasOption("v");
 			help = cmd.hasOption("h");
-
+			fullpath = cmd.hasOption("f");
+			
 		} catch (Exception e) {
 			printHelp(options);
 			return false;
@@ -86,6 +112,11 @@ public class Runner {
 		options.addOption(Option.builder("h").longOpt("help")
 		        .desc("Help")
 		        .build());
+		
+		options.addOption(Option.builder("f").longOpt("fullpath")
+				.desc("Show fullpath")
+				.argName("fullpath option")
+				.build());
 
 		return options;
 	}
